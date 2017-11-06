@@ -2,6 +2,10 @@ import json
 # Create your views here.
 import sys
 import traceback
+from django.core.files.uploadedfile import UploadedFile
+
+from django.core.files.storage import FileSystemStorage
+
 from django.http.response import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
@@ -91,32 +95,17 @@ def upload(req):
     resp = Response()
     if req.method == 'POST':
         try:
-            req.FILES['file']
-            jsonObj = json.loads(req.body)
-            mylogger.info('Received {0} {1} {2}'.format(json.loads(str(req.body)), repr(req.body), str(jsonObj)))
-            res = None
-            if jsonObj:
-                params = DeploymentParam().importJson(jsonObj)
-                mylogger.info('IP: {0}'.format(params.ipAddress))
-                existing = ExDeploymentParams.objects.filter(ipAddress=params.ipAddress)
-                if existing:
-                    res = existing[0]
-                mylogger.info('Found {0}'.format(repr(res)))
-
-            else:
-                raise AssertionError('No deployment param given')
-
-            if not res:
-                res = ExDeploymentParams.objects.create(ipAddress=params.ipAddress)
-                res.save()
-                mylogger.info('Created {0}'.format(repr(res)))
+            f = req.FILES['file']
+            fs = FileSystemStorage()
+            fs.save(f.name, f)
 
             resp.status = STATUS_OK
-            resp.data = res.export_json()
+            resp.data = 'Uploaded ' + str(f)
 
         except Exception as e:
             mylogger.warning('Encountered {0} at {1}'.format(e, traceback.format_tb(sys.exc_info()[2])))
             resp.msg = str(e)
+
     else:
         resp.msg = 'Only support POST method'
 
