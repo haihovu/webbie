@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Field} from "../field/field.component";
 
 @Component({
   selector: 'app-panel',
@@ -6,8 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./panel.component.css']
 })
 export class PanelComponent implements OnInit {
-
-  constructor() { }
+  fields: Field[]
+  name: string;
+  constructor(name: string, fields: Field[]) {
+    this.fields = fields;
+    this.name = name;
+  }
 
   ngOnInit() {
   }

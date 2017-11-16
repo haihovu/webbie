@@ -1,3 +1,4 @@
-<p>
-  field works!
-</p>
+<div>
+  <label for="{{field.name}}">{{field.label}}</label>
+  <input id="{{field.name}}" type="{{field.type}}" [(ngModel)]="field.value">
+</div>

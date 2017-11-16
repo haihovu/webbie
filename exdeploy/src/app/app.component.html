@@ -28,6 +28,8 @@
 			<td></td>
 			</tr>
 		</table>
+		<app-panel [fields]="mgtFields()" [name]="Management"></app-panel>
+		<app-panel [fields]="addressFields()" [name]="Address"></app-panel>
 	</form>
 	<form name='upload'>
 		<label>Select a file</label><input #file name='file' (change)="fileInput($event)" type="file">
